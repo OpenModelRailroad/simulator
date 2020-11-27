@@ -4,15 +4,17 @@ from random import randint, uniform
 import argparse
 import uuid
 import re
+import socket
+import json
 
 
 class Simulator:
-    # {'ip':'127.0.0.1', 'mac': '00:80:41:ae:fd:7f', 'hostname': 'block_01'}
     ip = '0.0.0.0'
     mac = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
     hostname = ''
     factory = None
     random_sleep = False
+    sock = None
 
     def __init__(self, random_sleep, ht):
         self.factory = DCCPacketFactory()
@@ -21,6 +23,9 @@ class Simulator:
             self.hostname = ht
         else:
             self.hostname = 'simulator'
+
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect(('localhost', 11337))
         self.sending_init()
 
     def __str__(self):
@@ -32,11 +37,17 @@ class Simulator:
         """
         return str % (self.ip, self.mac, self.hostname, self.random_sleep)
 
-    def send(self):
-        pass
+    def send(self, msg):
+        totalsent = 0
+        while totalsent < len(msg):
+            sent = self.sock.send(msg[totalsent:])
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            totalsent = totalsent + sent
 
     def sending_init(self):
-        pass
+        msg = {'ip': self.ip, 'mac': self.mac, 'hostname': self.hostname}
+        self.send(json.dumps(msg).encode('utf-8'))
 
     def start(self):
         while True:
