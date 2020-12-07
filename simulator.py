@@ -50,18 +50,18 @@ class Simulator:
                 print("sent %s to %s [%d bytes]" % (msg, self.sock.getsockname(), sys.getsizeof(msg)))
             totalsent = totalsent + sent
 
-    def sending_info(self):
-        msg = {'type': 'sniffer', 'ip': self.ip, 'mac': self.mac, 'hostname': self.hostname}
+    def send_heartbeat(self):
+        msg = {'type': 'heartbeat', 'ip': self.ip, 'mac': self.mac, 'hostname': self.hostname}
         self.send(json.dumps(msg).encode('utf-8'))
 
     def start(self):
-        self.sending_info()
+        self.send_heartbeat()
         start_time = int(round(time.time() * 1000))
 
         while True:
 
             if (int(round(time.time() * 1000)) - start_time) > 10000:
-                self.sending_info()
+                self.send_heartbeat()
                 start_time = int(round(time.time() * 1000))
 
             msg_type = uniform(0.0, 3.5)
