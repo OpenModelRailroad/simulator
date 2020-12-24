@@ -38,7 +38,8 @@ class Simulator:
     random_sleep = False
     sock = None
 
-    def __init__(self, random_sleep, ht):
+    def __init__(self, logserver_ip, random_sleep, ht):
+        self.logserver_ip = logserver_ip
         self.factory = DCCPacketFactory()
         self.random_sleep = random_sleep
         if ht:
@@ -47,7 +48,7 @@ class Simulator:
             self.hostname = 'simulator'
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.connect(('localhost', 11337))
+        self.sock.connect((self.logserver_ip, 11337))
         self.start()
 
     def __str__(self):
@@ -128,6 +129,7 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--name', help='name of simulator', required=False)
     parser.add_argument('-p', '--protocol', help='dcc or mfx. default is randomized between these two protocol',
                         required=False)
+    parser.add_argument('-l', '--logserver', help='ip address of logserver', required=False, default='localhost')
     args = parser.parse_args()
 
     if args.protocol not in ['dcc', 'mfx']:
@@ -136,6 +138,6 @@ if __name__ == "__main__":
         sys.exit()
 
     print(args)
-    simulator = Simulator(args.random, args.name)
+    simulator = Simulator(args.logserver, args.random, args.name)
     print(simulator)
     simulator.start()

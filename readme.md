@@ -5,12 +5,14 @@ The Simulator is used to send constant messages to the Logserver. Currently it s
 * MFX
 
 ## Parameters
-
-| short | long     | description                     |
-|-------|----------|---------------------------------|
-| -r    | --random | randomize time between messages |
-| -n    | --name   | hostname for the simulator      |
-
+| short | long        | description                         |
+|-------|-------------|-------------------------------------|
+| -r    | --random    | randomize time between messages     |
+| -n    | --name      | hostname for the simulator          |
+| -p    | --protocol  | protocol which is used (dcc or mfx) |
+| -l    | --logserver | logserver ip default is localhost   |
+| -l    | --logserver | logserver ip default is localhost   |
+| -h    | --help      | show help                           |
 ## License
 see license.md
 
