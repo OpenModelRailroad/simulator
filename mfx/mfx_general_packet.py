@@ -17,6 +17,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import sys
+from bitstring import BitArray
+
 
 class MFXGeneralPackage(object):
-    pass
+
+    def __init__(self, address_bytes, data_bytes=[]):
+        self.praeamble = BitArray('0b01110')
+        self.address_bytes = BitArray(address_bytes)
+        self.data_bytes = map(BitArray, data_bytes)
+        if sys.version_info.major >= 3:
+            self.data_bytes = list(self.data_bytes)
+
+    @staticmethod
+    def from_bit_array(int_array):
+        packet = BitArray(int_array)
+
+    def to_bit_array(self):
+        packet = BitArray()
+        packet.append(self.praeamble)
+        packet.append(self.address_bytes)
+        for byte in self.data_bytes:
+            packet.append(byte)
+        return map(int, packet)
+
+    def to_bit_string(self):
+        return "".join(map(str, self.to_bit_array()))
+
+    def __str__(self):
+        return "Device #%d: %s" % (self.address_bytes.uint, " ".join(map(str, self.data_bytes
+                                                                          )))

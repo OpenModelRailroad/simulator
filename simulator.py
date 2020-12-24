@@ -126,10 +126,16 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--random', help='randomise time between packages. intervall is between 0.1 and 1.0 sec',
                         action='store_true', required=False)
     parser.add_argument('-n', '--name', help='name of simulator', required=False)
+    parser.add_argument('-p', '--protocol', help='dcc or mfx. default is randomized between these two protocol',
+                        required=False)
     args = parser.parse_args()
 
-    print(args)
+    if args.protocol not in ['dcc', 'mfx']:
+        sys.stderr.write("not a known protocol type\n")
+        parser.print_help()
+        sys.exit()
 
+    print(args)
     simulator = Simulator(args.random, args.name)
     print(simulator)
     simulator.start()
