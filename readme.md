@@ -4,6 +4,13 @@ The Simulator is used to send constant messages to the Logserver. Currently it s
 * DCC
 * MFX
 
+## Installation
+* Clone this repository
+* cd into the directory
+* Create virtualenv
+* install dependencies with ```pip install -r requirements.txt```
+* run the simulator with te parameters below
+
 ## Parameters
 | short | long        | description                         |
 |-------|-------------|-------------------------------------|
@@ -11,8 +18,8 @@ The Simulator is used to send constant messages to the Logserver. Currently it s
 | -n    | --name      | hostname for the simulator          |
 | -p    | --protocol  | protocol which is used (dcc or mfx) |
 | -l    | --logserver | logserver ip default is localhost   |
-| -l    | --logserver | logserver ip default is localhost   |
 | -h    | --help      | show help                           |
+
 ## License
 see license.md
 
