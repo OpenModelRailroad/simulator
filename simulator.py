@@ -37,11 +37,20 @@ class Simulator:
     factory = None
     random_sleep = False
     sock = None
+    protocol = ''
+    mfxfunc = [
+        '011101000001011001000000010110101110',
+        '011101000000101001001000000000110101110',
+        '01110100000101000001000000110101110',
+        '01110100000101000010000000110101110',
+        '00001110110111110100010101110000'
+    ]
 
-    def __init__(self, logserver_ip, random_sleep, ht):
+    def __init__(self, logserver_ip, random_sleep, ht, protocol):
         self.logserver_ip = logserver_ip
         self.factory = DCCPacketFactory()
         self.random_sleep = random_sleep
+        self.protocol = protocol
         if ht:
             self.hostname = ht
         else:
@@ -107,10 +116,18 @@ class Simulator:
                 packet = self.factory.reset_packet()
 
             bit_string = packet.to_bit_string()
-            packet_object = {
-                "type": "dcc",
-                "raw": bit_string
-            }
+
+            # TODO change back dude
+            if self.protocol == 'dcc':
+                packet_object = {
+                    "type": "dcc",
+                    "raw": bit_string
+                }
+            else:
+                packet_object = {
+                    "type": "mfx",
+                    "raw": self.mfxfunc[randint(0, 4)]
+                }
 
             # print("sending %s packet:\t%s " % (type_string, bit_string))
             self.send(json.dumps(packet_object).encode('utf-8'))
@@ -128,16 +145,11 @@ if __name__ == "__main__":
                         action='store_true', required=False)
     parser.add_argument('-n', '--name', help='name of simulator', required=False)
     parser.add_argument('-p', '--protocol', help='dcc or mfx. default is randomized between these two protocol',
-                        required=False)
+                        required=False, default='dcc')
     parser.add_argument('-l', '--logserver', help='ip address of logserver', required=False, default='localhost')
     args = parser.parse_args()
 
-    if args.protocol not in ['dcc', 'mfx']:
-        sys.stderr.write("not a known protocol type\n")
-        parser.print_help()
-        sys.exit()
-
     print(args)
-    simulator = Simulator(args.logserver, args.random, args.name)
+    simulator = Simulator(args.logserver, args.random, args.name, args.protocol)
     print(simulator)
     simulator.start()

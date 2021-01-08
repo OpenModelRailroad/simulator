@@ -32,3 +32,4 @@ if __name__ == "__main__":
                                                  mfxpacket.calc_drivingstep(fahrstufe)))
 
     pkg = MFXGeneralPacket.from_bit_array([0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0])
+    print(pkg)
